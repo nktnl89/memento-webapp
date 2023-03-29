@@ -33,30 +33,14 @@
               form.addEventListener("submit", function (e) {
                      e.preventDefault()
               
-                     let formData = new FormData(this);
-                     let start_at = formData.get("start_at").value();
-                     let message = formData.get("notification_message").value();
+                     
+                     let startAt = document.getElementById("start_at").value;
+                     let message = document.getElementById("notification_message").value;
       
-                     let resultData = {"startAt": startAt, "message": notificaitonText};
+                     let resultData = {"startAt": startAt, "message": message};
               
                      tg.sendData(JSON.stringify(resultData));
        });
-
-       // let btn = document.getElementById("send-btn");  
-       // let startAt = document.getElementById("start_at").value;
-       // let notificaitonText = document.getElementById("notification_message").value;
-
-       // let resultData = {"startAt":startAt, "message": notificaitonText};
-
-       // btn.addEventListener('click', function(){ 
-       //        tg.sendData(JSON.stringify(resultData));
-// });
-
-       // Telegram.WebApp.onEvent('mainButtonClicked', function(){
-              
-              
-
-       // });
 
 </script>
 

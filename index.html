@@ -20,9 +20,27 @@
        min="2023-03-25T00:00" max="2023-12-31T23:59" required>
 <br>
 <label for="notification_message">Notification-message:</label>
-<input type="text" id="notification_message" name="notification_message" minlength="4" maxlength="100"
-       size="10" required>
+<input type="text" id="notification_message" name="notification_message" minlength="4" maxlength="100" size="10" required>
+<button id="send-btn" class="button">Save memento</button>
 </body>
+
+<script>
+       let tg = window.Telegram.WebApp;    
+       tg.expand();
+       let btn = document.getElementById("send-btn");  
+       let startAt = document.getElementById("start_at").value;
+       let notificaitonText = document.getElementById("notification_message").value;
+
+       let resultData = {"startAt":startAt, "message": notificaitonText};
+
+       Telegram.WebApp.onEvent('mainButtonClicked', function(){
+              
+              tg.sendData("{\"startAt\":"+startAt+", \"message\":"+notificaitonText+"}\"");
+
+       });
+
+</script>
+
 </html>
 
 </html>

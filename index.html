@@ -20,7 +20,8 @@
               <br>
               <label for="notification_message">Notification-message:</label>
               <input type="text" id="notification_message" name="notification_message" minlength="4" maxlength="100" size="10" required>
-              <button>Get Value</button>
+              <br>
+              <input type="submit" value="Submit">
           </form>
       
 </body>
@@ -33,7 +34,6 @@
               form.addEventListener("submit", function (e) {
                      e.preventDefault()
               
-                     
                      let startAt = document.getElementById("start_at").value;
                      let message = document.getElementById("notification_message").value;
       

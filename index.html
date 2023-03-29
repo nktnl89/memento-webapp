@@ -21,7 +21,7 @@
 <br>
 <label for="notification_message">Notification-message:</label>
 <input type="text" id="notification_message" name="notification_message" minlength="4" maxlength="100" size="10" required>
-<button id="send-btn" class="button">Save memento</button>
+<input type="send-btn" value="Book party!" />
 </body>
 
 <script>
@@ -33,11 +33,15 @@
 
        let resultData = {"startAt":startAt, "message": notificaitonText};
 
-       Telegram.WebApp.onEvent('mainButtonClicked', function(){
-              
+       btn.addEventListener('click', function(){ 
               tg.sendData("{\"startAt\":"+startAt+", \"message\":"+notificaitonText+"}\"");
+});
 
-       });
+       // Telegram.WebApp.onEvent('mainButtonClicked', function(){
+              
+              
+
+       // });
 
 </script>
 

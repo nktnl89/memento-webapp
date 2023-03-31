@@ -1,45 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <meta name="format-detection" content="telephone=no"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="MobileOptimized" content="176"/>
-    <meta name="HandheldFriendly" content="True"/>
-    <meta name="robots" content="noindex,nofollow"/>
-    <title></title>
-    <script src="https://telegram.org/js/telegram-web-app.js?1"></script>
+       <meta charset="utf-8">
+       <meta name="viewport"
+              content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+       <meta name="format-detection" content="telephone=no" />
+       <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+       <meta name="MobileOptimized" content="176" />
+       <meta name="HandheldFriendly" content="True" />
+       <meta name="robots" content="noindex,nofollow" />
+       <title></title>
+       <script src="https://telegram.org/js/telegram-web-app.js?1"></script>
 </head>
 
 <body>
        <form class="memento-create-form">
               <label for="start_at">Choose a time for your notification:</label>
-              <input type="datetime-local" id="start_at" name="start_at" value="2018-06-12T19:30" min="2023-03-25T00:00" max="2023-12-31T23:59" required>
+              <input type="datetime-local" id="start_at" name="start_at" value="2018-06-12T19:30" min="2023-03-25T00:00"
+                     max="2025-12-31T23:59" required>
               <br>
               <label for="notification_message">Notification-message:</label>
-              <input type="text" id="notification_message" name="notification_message" minlength="4" maxlength="100" size="10" required>
+              <input type="text" id="notification_message" name="notification_message" minlength="4" maxlength="100"
+                     size="10" required>
               <br>
               <input type="submit" value="Submit">
-          </form>
-      
+       </form>
 </body>
 
 <script>
-       let tg = window.Telegram.WebApp;    
+       let tg = window.Telegram.WebApp;
        tg.expand();
+
+       fetch('https://7c70-46-147-136-15.eu.ngrok.io/memento')
+              .then(response => {
+                     if (response.ok) {
+                            return response.json();
+                     } else {
+                            throw new Error('Unable to retrieve data from server');
+                     }
+              })
+              .then(data => {
+                     const dateString = data.currentDateTime;
+                     const date = new Date(dateString);
+                     const dateTimeLocalValue = date.toISOString().substring(0, 16); // "2023-03-31T11:35"
+
+                     const inputElement = document.getElementById('start_at');
+                     inputElement.setAttribute('min', dateTimeLocalValue);
+                     inputElement.setAttribute('value', dateTimeLocalValue);
+              })
+              .catch(error => {
+                     console.error(error);
+              });
+
        let form = document.querySelector(".memento-create-form");
-      
-              form.addEventListener("submit", function (e) {
-                     e.preventDefault()
-              
-                     let startAt = document.getElementById("start_at").value;
-                     let message = document.getElementById("notification_message").value;
-      
-                     let resultData = {"startAt": startAt, "message": message};
-              
-                     tg.sendData(JSON.stringify(resultData));
+
+       form.addEventListener("submit", function (e) {
+              e.preventDefault()
+
+              let startAt = document.getElementById("start_at").value;
+              let message = document.getElementById("notification_message").value;
+
+              let resultData = { "startAt": startAt, "message": message };
+
+              tg.sendData(JSON.stringify(resultData));
        });
 
 </script>

@@ -17,8 +17,8 @@
 <body>
        <form class="memento-create-form">
               <label for="start_at">Choose a time for your notification:</label>
-              <input type="datetime-local" id="start_at" name="start_at" value="2018-06-12T19:30" min="2023-03-25T00:00"
-                     max="2025-12-31T23:59" required>
+              <input type="datetime-local" id="start_at" name="start_at" max="2025-12-31T23:59" required>
+              <!-- value="2018-06-12T19:30" min="2023-03-25T00:00" -->
               <br>
               <label for="notification_message">Notification-message:</label>
               <input type="text" id="notification_message" name="notification_message" minlength="4" maxlength="100"
@@ -31,19 +31,30 @@
 <script>
        let tg = window.Telegram.WebApp;
        tg.expand();
+       const myHeaders = new Headers();
+       myHeaders.append("Content-Type", "application/json");
+       const myInit = {
+              method: "POST",
+              headers: myHeaders
+       };
 
-       fetch('https://7c70-46-147-136-15.eu.ngrok.io/memento')
+       const myRequest = new Request(" https://72a2-46-147-140-26.eu.ngrok.io/memento", myInit);
+
+
+       fetch(myRequest)
               .then(response => {
+                     console.log(response);
                      if (response.ok) {
                             return response.json();
                      } else {
+
                             throw new Error('Unable to retrieve data from server');
                      }
               })
               .then(data => {
                      const dateString = data.currentDateTime;
                      const date = new Date(dateString);
-                     const dateTimeLocalValue = date.toISOString().substring(0, 16); // "2023-03-31T11:35"
+                     const dateTimeLocalValue = date.toISOString().substring(0, 16);
 
                      const inputElement = document.getElementById('start_at');
                      inputElement.setAttribute('min', dateTimeLocalValue);

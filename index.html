@@ -73,8 +73,8 @@
               const startDateTime = new Date(startAt);
               let message = document.getElementById("notification_message").value;
 
-              let resultData = { "startAt": startDateTime.toISOString(), "message": message };
-              
+              let resultData = { "startAt": startDateTime.toISOString().substring(0, 23), "message": message };
+              console.log(resultData);
               tg.sendData(JSON.stringify(resultData));
        });
 

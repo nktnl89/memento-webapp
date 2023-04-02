@@ -38,7 +38,7 @@
               headers: myHeaders
        };
 
-       const myRequest = new Request(" https://72a2-46-147-140-26.eu.ngrok.io/memento", myInit);
+       const myRequest = new Request("https://12f6-46-147-132-0.eu.ngrok.io/memento", myInit);
 
 
        fetch(myRequest)
@@ -70,10 +70,11 @@
               e.preventDefault()
 
               let startAt = document.getElementById("start_at").value;
+              const startDateTime = new Date(startAt);
               let message = document.getElementById("notification_message").value;
 
-              let resultData = { "startAt": startAt, "message": message };
-
+              let resultData = { "startAt": startDateTime.toISOString(), "message": message };
+              
               tg.sendData(JSON.stringify(resultData));
        });
 

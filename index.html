@@ -54,11 +54,13 @@
               .then(data => {
                      const dateString = data.currentDateTime;
                      const date = new Date(dateString);
-                     const dateTimeLocalValue = date.toISOString().substring(0, 16);
+
+                     var timestamp = date.getTime() - date.getTimezoneOffset() * 60000;
+                     var correctDate = new Date(timestamp).toISOString().substring(0, 16);
 
                      const inputElement = document.getElementById('start_at');
-                     inputElement.setAttribute('min', dateTimeLocalValue);
-                     inputElement.setAttribute('value', dateTimeLocalValue);
+                     inputElement.setAttribute('min', correctDate);
+                     inputElement.setAttribute('value', correctDate);
               })
               .catch(error => {
                      console.error(error);

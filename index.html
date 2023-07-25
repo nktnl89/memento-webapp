@@ -13,12 +13,14 @@
        <title></title>
        <script src="https://telegram.org/js/telegram-web-app.js?1"></script>
        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+       <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_blue.css">
+
 
        <style>
-              /* Include the Montserrat font from Google Fonts */
               @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
-
-              /* Apply Montserrat as the font family for the entire document */
+              * {
+                     box-sizing: border-box;
+              }
               body {
                      font-family: 'Montserrat', sans-serif;
               }
@@ -43,19 +45,22 @@
               }
 
               input {
-                     padding: 12px;
+                     border: none;
+                     outline: none;
+                     background-color: transparent;
+                     font-size: 16px;
+                     flex: 1;
+                     padding: 0px;
               }
 
               label {
                      margin-bottom: 8px;
               }
 
-              /* New button style with complementary background color */
               button {
                      display: inline-block;
                      padding: 12px 24px;
                      background-color: #3498db;
-                     /* New blueish color */
                      color: #fff;
                      text-decoration: none;
                      border: none;
@@ -63,21 +68,60 @@
                      box-shadow: 0 4px 0 #2980b9;
                      font-family: 'Montserrat', sans-serif;
                      font-weight: 700;
-                     /* New shadow color */
                      transition: transform 0.3s ease, box-shadow 0.3s ease;
               }
 
               button:hover {
                      transform: translateY(-2px);
                      box-shadow: 0 6px 0 #2980b9;
-                     /* New shadow color on hover */
+              }
+
+              .flatpickr-input {
+                     opacity: 0;
+                     flex: 1;
+                     z-index: 1;
+              }
+
+              #datepicker {
+                     opacity: 0;
+                     flex: 1;
+              }
+
+              .datepicker_wrapper {
+                     position: relative;
+                     height: 45.5px;
+                     display: flex;
+              }
+
+              .picker_mock_mobile {
+                     position: absolute;
+                     width: 100%;
+                     height: 100%;
+                     line-height: 45.5px;
+                     border: 1px solid black;
+                     border-radius: 8px;
+              }
+
+              .picker_mock_mobile p {
+                     padding-left: 11px;
+                     margin: 0;
+              }
+
+              .picker_error {
+                     border-color: red;
+                     color: red;
+              }
+
+              .input_wrapper {
+                     display: flex;
+                     border: 1px solid black;
+                     padding: 11px;
+                     border-radius: 8px;
               }
 
 
-              @media (min-width: 767px) {
 
-                     /* Put your mobile-specific CSS styles here */
-                     /* For example, changing the width of an element */
+              @media (min-width: 767px) {
                      .memento-create-form {
                             max-width: 478px;
                      }
@@ -88,13 +132,20 @@
 <body>
        <form class="memento-create-form">
               <label for="start_at">Choose a time for your notification:</label>
-              <input type="text" id="datepicker" required>
+              <div class="datepicker_wrapper">
+                     <input type="text" id="datepicker" required>
+                     <div class="picker_mock_mobile">
+                            <p>Set the date</p>
+                     </div>
+              </div>
               <!-- <input type="datetime-local" id="start_at" name="start_at" max="2025-12-31T23:59" required> -->
               <!-- value="2018-06-12T19:30" min="2023-03-25T00:00" -->
               <br>
               <label for="notification_message">Notification-message:</label>
-              <input type="text" id="notification_message" name="notification_message" minlength="4" maxlength="100"
-                     size="10" required>
+              <div class="input_wrapper" style="height: 45.5px">
+                     <input type="text" id="notification_message" name="notification_message" minlength="4"
+                            maxlength="100" size="10" required>
+              </div>
               <br>
               <button type="submit">SUBMIT</button>
        </form>
@@ -102,8 +153,10 @@
 </body>
 
 <script>
+
        let tg = window.Telegram.WebApp;
        tg.expand();
+
        const myHeaders = new Headers();
        myHeaders.append("Content-Type", "application/json");
        const myInit = {
@@ -113,12 +166,36 @@
 
        const myRequest = new Request("https://a865-46-147-132-0.eu.ngrok.io/memento", myInit);
 
-       flatpickr("#datepicker", {
-              enableTime: true, // Enable time picking
-              dateFormat: "Z",
-              time_24hr: true, // Date and time format
-              minDate: 'today',
-       });
+
+
+
+       document.addEventListener("DOMContentLoaded", function () {
+              const mockDiv = document.querySelector('.picker_mock_mobile')
+              const dateInput = document.getElementById("#datepicker");
+
+
+              const instanceFlatPickr = flatpickr("#datepicker", {
+                     enableTime: true,
+                     time_24hr: true,
+                     minDate: 'today',
+              });
+
+              // Step 2: Add an event listener for the "onChange" event
+              instanceFlatPickr.config.onChange.push(function (selectedDates, dateStr, instance) {
+                     const p = document.querySelector('.picker_mock_mobile > p')
+                     if (dateStr) {
+                            p.innerText = dateStr;
+                            mockDiv.classList.remove('picker_error')
+                     } else {
+                            p.innerText = "Can't set this date"
+                            mockDiv.classList.add('picker_error')
+                     }
+
+              })
+
+       })
+
+
 
 
        // fetch(myRequest)
@@ -148,6 +225,7 @@
 
        let form = document.querySelector(".memento-create-form");
 
+
        form.addEventListener("submit", function (e) {
               e.preventDefault()
 
@@ -155,7 +233,7 @@
               let message = document.getElementById("notification_message").value;
 
               let resultData = { "startAt": startAt, "message": message };
-              console.log(resultData);
+              console.log(resultData, 'result')
               tg.sendData(JSON.stringify(resultData));
        });
 

@@ -164,10 +164,7 @@
               headers: myHeaders
        };
 
-       const myRequest = new Request("https://a865-46-147-132-0.eu.ngrok.io/memento", myInit);
-
-
-
+       // const myRequest = new Request("https://a865-46-147-132-0.eu.ngrok.io/memento", myInit);
 
        document.addEventListener("DOMContentLoaded", function () {
               const mockDiv = document.querySelector('.picker_mock_mobile')
@@ -195,44 +192,19 @@
 
        })
 
-
-
-
-       // fetch(myRequest)
-       //        .then(response => {
-       //               console.log(response);
-       //               if (response.ok) {
-       //                      return response.json();
-       //               } else {
-
-       //                      throw new Error('Unable to retrieve data from server');
-       //               }
-       //        })
-       //        .then(data => {
-       //               const dateString = data.currentDateTime;
-       //               const date = new Date(dateString);
-
-       //               var timestamp = date.getTime() - date.getTimezoneOffset() * 60000;
-       //               var correctDate = new Date(timestamp).toISOString().substring(0, 16);
-
-       //               const inputElement = document.getElementById('start_at');
-       //               inputElement.setAttribute('min', correctDate);
-       //               inputElement.setAttribute('value', correctDate);
-       //        })
-       //        .catch(error => {
-       //               console.error(error);
-       //        });
-
        let form = document.querySelector(".memento-create-form");
-
 
        form.addEventListener("submit", function (e) {
               e.preventDefault()
 
               let startAt = document.getElementById("datepicker").value;
+              const date = new Date(startAt);
+
+              let timestamp = date.getTime() - date.getTimezoneOffset() * 60000;
+              let correctDate = new Date(timestamp).toISOString().substring(0, 16);
               let message = document.getElementById("notification_message").value;
 
-              let resultData = { "startAt": startAt, "message": message };
+              let resultData = { "startAt": correctDate, "message": message };
               console.log(resultData, 'result')
               tg.sendData(JSON.stringify(resultData));
        });
